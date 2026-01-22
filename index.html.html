@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JH VIOLINISTA | ELEGANCE</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border: #e5e5e5;
+            --accent: #000000;
+            --wa-green: #25D366;
+            --admin-blue: #007bff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; letter-spacing: 0.5px; }
+
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            margin: 0; padding: 20px; 
+            color: var(--text-primary); 
+            line-height: 1.6;
+        }
+
+        .container { max-width: 450px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 50px; padding-top: 20px; }
+
+        h1 { 
+            font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 6px; margin: 0;
+            border-bottom: 1px solid var(--text-primary); display: inline-block; padding-bottom: 10px;
+        }
+
+        .card { background: #fff; padding: 10px 0; margin-bottom: 30px; }
+
+        .section-title { 
+            font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 25px; border-left: 3px solid #000; padding-left: 15px;
+        }
+
+        label { display: block; font-size: 10px; text-transform: uppercase; font-weight: 700; margin-top: 20px; color: var(--text-secondary); }
+
+        input, select, textarea { 
+            width: 100%; border: none; border-bottom: 1px solid var(--border); padding: 12px 0; 
+            margin-top: 5px; background: transparent; font-size: 15px; transition: border-color 0.3s; border-radius: 0;
+        }
+
+        input:focus, select:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--text-primary); }
+
+        .btn { 
+            display: block; width: 100%; padding: 20px; border: 1px solid var(--text-primary);
+            font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; text-align: center; text-decoration: none; margin-top: 15px; transition: all 0.3s;
+        }
+
+        .btn-black { background: var(--text-primary); color: #fff; }
+        .btn-outline { background: transparent; color: var(--text-primary); }
+        .btn-wa { background: transparent; color: var(--wa-green); border-color: var(--wa-green); }
+        .btn-ig { border-color: #000; color: #000; font-size: 11px; }
+        
+        .btn-clear { 
+            border: none; color: #999; font-size: 10px; text-decoration: underline; 
+            margin-top: 25px; background: none; width: 100%; text-transform: uppercase;
+        }
+
+        details { margin-top: 15px; border: 1px solid var(--border); }
+        summary { padding: 15px; font-size: 12px; text-transform: uppercase; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; }
+
+        .songs-container { max-height: 400px; overflow-y: auto; background: #fff; }
+        .song-item { padding: 15px; border-bottom: 1px solid #f9f9f9; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .song-item.selected { background: #000; color: #fff; }
+
+        .yt-link { font-size: 10px; text-decoration: underline; color: inherit; text-transform: uppercase; }
+
+        #musicSection { display: none; }
+        .footer-note { text-align: center; font-size: 10px; color: #999; margin-top: 50px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        #adminArea { 
+            display: none; margin-top: 30px; border: 1px solid var(--admin-blue); 
+            padding: 20px; background: #f0f7ff;
+        }
+        .admin-label { color: var(--admin-blue); font-size: 11px; font-weight: 800; text-align: center; display: block; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header><h1>JH VIOLINISTA</h1></header>
+
+    <div class="card" id="formCard">
+        <div class="section-title">Reserva de Evento</div>
+        
+        <label>Nombre</label>
+        <input type="text" id="userName" placeholder="Nombre completo" onkeyup="persist()">
+        
+        <label>Teléfono</label>
+        <input type="tel" id="userPhone" placeholder="0000 0000" maxlength="8" onkeyup="persist()">
+
+        <label>Tipo de Evento</label>
+        <select id="eventType" onchange="persist()">
+            <option value="Boda">BODA</option>
+            <option value="15 Años">15 AÑOS</option>
+            <option value="Privado">EVENTO PRIVADO</option>
+            <option value="Corporativo">EVENTO CORPORATIVO</option>
+            <option value="Otro">OTRO</option>
+        </select>
+
+        <label>Fecha</label>
+        <input type="date" id="eventDate" onchange="persist()">
+
+        <label>Notas Adicionales</label>
+        <textarea id="eventNotes" placeholder="Detalles específicos..." onkeyup="persist()"></textarea>
+
+        <button onclick="showSendOptions()" class="btn btn-black">Solicitar Cotización</button>
+        <div id="sendOptions" style="display:none; margin-top:10px;">
+            <button onclick="sendToJH()" class="btn btn-wa">Enviar vía WhatsApp</button>
+        </div>
+
+        <button onclick="openMusic()" class="btn btn-outline" style="margin-top: 40px;">Elegir Repertorio</button>
+        <a href="https://www.instagram.com/jhviolinista?utm_source=qr&igsh=MTZoc253djloYTZzNw%3D%3D" target="_blank" class="btn btn-ig">Instagram @jhviolinista</a>
+        
+        <button onclick="clearUserForm()" class="btn-clear">Borrar Formulario</button>
+    </div>
+
+    <div id="musicSection" class="card">
+        <div class="section-title">Selección Musical</div>
+        <details open><summary>POP, ROCK & CLÁSICOS <span>+</span></summary><div class="songs-container" id="listPop"></div></details>
+        <details><summary>MÚSICA CRISTIANA <span>+</span></summary><div class="songs-container" id="listCristo"></div></details>
+        
+        <div style="margin-top:30px; border-top: 1px solid #000; padding-top: 20px;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 800;">Seleccionadas: <span id="songCount">0</span></div>
+            <div id="selectedText" style="font-size:12px; color:#777; margin-top:10px; font-style: italic;"></div>
+        </div>
+
+        <button onclick="sendRepertoire()" class="btn btn-black" style="margin-top:30px;">Confirmar Repertorio</button>
+        <button onclick="location.reload()" class="btn btn-outline" style="font-size: 10px; border:none;">← Volver</button>
+    </div>
+
+    <div id="adminArea">
+        <span class="admin-label">GESTIÓN DE ALIANZAS</span>
+        <label style="color:var(--admin-blue)">Seleccionar Proveedor</label>
+        <select id="promoSelect" style="border-bottom: 1px solid var(--admin-blue)">
+            <option value="none">Sin alianza</option>
+            <option value="mustachios">Mustachios Bakery (25% OFF)</option>
+        </select>
+        <button onclick="adminToClient()" class="btn btn-black" style="background: var(--admin-blue); border-color: var(--admin-blue); margin-top: 25px;">Enviar al Cliente</button>
+        <button onclick="clearData()" style="width:100%; border:none; color:#999; font-size:9px; margin-top:20px; background:none;">RESET</button>
+    </div>
+
+    <div class="footer-note">Exclusividad Musical • 2026</div>
+    <center><button onclick="checkAdmin()" style="background:none; border:none; color:transparent; padding:20px;">Admin</button></center>
+</div>
+
+<script>
+    const igFullUrl = "https://www.instagram.com/jhviolinista?utm_source=qr&igsh=MTZoc253djloYTZzNw%3D%3D";
+    
+    const popRock = ["Elvis Presley - Can´t help falling in love", "Elvis Presley - Burning love", "Ed Sheeran - Perfect", "Christina Perri - A thousand years", "John Legend - All of me", "Maroon 5 - Memories", "Maroon 5 - Sugar", "Maroon 5 - Girls like you", "Frank Sinatra - Fly me to the moon", "Frank Sinatra - My way", "Frank Sinatra - New york", "Jason Mraz - I´m yours", "Farres - Quizas, quizas", "Carlos Gardel - Por una cabeza", "Besame mucho", "Guantanamera", "La bamba", "Andrea Bocelli - Vivo por lei", "Andrea Bocelli - Con te partiro", "Enya - Only time", "James Horner - My heart will go on (Titanic)", "Bruno Coulais - Les choristes (Carresse sur l´ocean)", "Coldplay - Viva la vida", "Coldplay - A sky full of stars", "Coldplay - The scientist", "Coldplay - Yellow", "Coldplay/Chainsmokers - Something just like this", "Coldplay - Clocks", "Coldplay - Fix you", "Coldplay - In my place", "Coldplay - Hymn for the weekend", "Sam Smith - I´m not the only one", "Sam Smith - Stay with me", "Adele - Someone like you", "Adele - Rolling in the Deep", "Adele - Hello", "Beyonce - Halo", "Bruno Mars - When I was your man", "Bruno Mars - Locked out of heaven", "Bruno Mars - Uptown Funk", "Bruno Mars - Talking to the moon", "Bruno Mars - Just the way you are", "Bruno Mars - Versace on the floor", "Bruno Mars - Die with a smile", "Selena Gomez - Calm down", "Ariana Grande - Love me harder", "Alan Walker - Faded", "Alicia Keys - Ain´t got you", "Alicia Keys - No one", "Alicia Keys - Girl on Fire", "Avicii - Wake me up", "Ben E King - Stand by me", "Billie Eilish, Khalid - Lovely", "Bob Marley - No woman, no cry", "Bob Marley - Is this love", "Bob Marley - Three little birds", "Calvin Harris - We found love", "Calvin Harris - Feel so close", "Camila Cabello - Havana", "Camila Cabello - Señorita", "Christina Aguilera - Say something", "Daft Punk - Get lucky", "David Guetta - Titanium", "David Guetta - I´m good", "Dua Lipa - Dance the night", "Dua Lipa - Cold heart", "Dua Lipa - IDGAF", "Dua Lipa - Break my heart", "Edith Piaf - La vie en rose", "Ellie Goulding - Love me like you do", "Enrique Iglesias - Bailando", "Enrique Iglesias - Loco", "Enrique Iglesias - Subeme la radio", "Foster the People - Pumped up kicks", "Guns N´ Roses - Sweet Child O' Mine", "Halsey, Chainsmokers - Closer", "Harry Styles - As it was", "Harry Styles - Sign of the times", "Justin Timberlake - Can´t stop the feeling", "Karol G - Tusa", "Katy Perry - Firework", "Katy Perry - Roar", "Khalid - Young dumb & broke", "Luis Fonsi - Despacito", "Manuel Turizo - La bachata", "Miley Cyrus - Flowers", "One Republic - Apologize", "One Republic - I ain´t worried", "Rihanna - Love on the brain", "Lorde - Team", "Taylor Swift - Love story", "The Beatles - Let it be", "The Carpenters - Close to you", "The Weeknd - Save your tears", "Post Malone - Sunflower", "Charlie Puth, Wiz Khalifa - See you again"];
+    const cristiana = ["Llévame más profundo", "Deseable", "Que se abra el cielo", "Solo quiero verte a ti", "Al que está sentado en el trono", "Cristo Jesús eres mi plenitud", "Abba Padre", "Digno", "Tu has sido fiel", "Vuelve a llenarme", "Ven te necesito", "Tu estás aquí", "Cerca de ti", "Tengo hambre de ti", "Tienen tu color", "Me dice que me ama", "Si hubiera estado allí", "Sumérgete en mi presencia", "Mi Jesús mi amado", "Al que es digno", "Sobrenatural", "Usa mi vida Señor", "Viviré", "Oh ven y deleitate en el Señor", "Cantare al Señor por siempre", "Purificame", "Mas que palabras", "El Señor es mi pastor", "Como el ciervo", "A Ti el alfa y la omega", "Jesús eres mi buen pastor", "Levántate Señor", "Hay momentos que las palabras", "Quiero levantar mis manos", "Al estar aquí", "Levantate sálmame", "Somos de gloria", "Creo en ti", "Ya no soy esclavo del temor", "Recibe toda la gloria", "Admirable", "Libre soy", "No hay lugar mas alto", "Tu nombre venceré", "Amamos tu presencia", "Su poder", "Bienvenido Espíritu Santo", "Libertad", "Increible", "Fiesta", "Inexplicable", "Cuan grande es Dios", "Dios incomparable", "Hosanna", "La niña de tus ojos"];
+
+    let selected = [];
+
+    const PROMOS = {
+        "mustachios": "\n\n🎁 *PROMO ESPECIAL:* Al adquirir productos de *Mustachios Bakery*, obtienes un 25% de descuento.\n💰 Precio Regular: Q1,200\n🔥 *Precio Final: Q900*"
+    };
+
+    function persist() {
+        const d = { n: document.getElementById("userName").value, p: document.getElementById("userPhone").value, t: document.getElementById("eventType").value, d: document.getElementById("eventDate").value, o: document.getElementById("eventNotes").value };
+        localStorage.setItem("jh_v_elegance", JSON.stringify(d));
+    }
+
+    function load() {
+        const saved = localStorage.getItem("jh_v_elegance");
+        if(saved) {
+            const d = JSON.parse(saved);
+            document.getElementById("userName").value = d.n || "";
+            document.getElementById("userPhone").value = d.p || "";
+            document.getElementById("eventType").value = d.t || "Boda";
+            document.getElementById("eventDate").value = d.d || "";
+            document.getElementById("eventNotes").value = d.o || "";
+        }
+    }
+
+    function createList(arr, elId) {
+        const container = document.getElementById(elId);
+        arr.forEach(s => {
+            const item = document.createElement("div");
+            item.className = "song-item";
+            item.innerHTML = `<span>${s}</span> <a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(s + ' violin')}" target="_blank">Escuchar</a>`;
+            item.onclick = (e) => {
+                if(e.target.tagName === 'A') return;
+                const idx = selected.indexOf(s);
+                if(idx > -1) { selected.splice(idx, 1); item.classList.remove("selected"); }
+                else { selected.push(s); item.classList.add("selected"); }
+                document.getElementById("songCount").innerText = selected.length;
+                document.getElementById("selectedText").innerText = selected.join(", ");
+            };
+            container.appendChild(item);
+        });
+    }
+
+    function showSendOptions() { document.getElementById("sendOptions").style.display = "block"; }
+    function openMusic() { document.getElementById("musicSection").style.display = "block"; document.getElementById("formCard").style.display = "none"; }
+    
+    function wa(msg, p = "59268980") { window.location.href = `https://api.whatsapp.com/send?phone=${p}&text=${encodeURIComponent(msg)}`; }
+
+    function generateBaseMsg(name, type, date, notes, promoKey) {
+        let promoText = (promoKey && PROMOS[promoKey]) ? PROMOS[promoKey] : "";
+        
+        // Mensaje sin el enlace de GitHub
+        return `🎻 *JH VIOLINISTA*\n\n¡Hola! Muchas gracias por llenar el formulario con los datos de tu evento. Aquí te comparto el resumen:\n\n👤 *Nombre:* ${name}\n✨ *Evento:* ${type}\n📅 *Fecha:* ${date}\n📝 *Notas:* ${notes}${promoText}\n\nDespués de revisar la cotización, puedes ingresar al link de mi perfil para elegir la música de tu evento en la opción: *"Elegir Repertorio"*\n\n📸 Instagram: ${igFullUrl}`;
+    }
+
+    function sendToJH() {
+        const msg = generateBaseMsg(document.getElementById("userName").value, document.getElementById("eventType").value, document.getElementById("eventDate").value, document.getElementById("eventNotes").value);
+        wa(msg);
+    }
+
+    function adminToClient() {
+        let p = document.getElementById("userPhone").value.replace(/\D/g,'');
+        let promo = document.getElementById("promoSelect").value;
+        if(!p) return alert("Falta el número.");
+        const msg = generateBaseMsg(
+            document.getElementById("userName").value, 
+            document.getElementById("eventType").value, 
+            document.getElementById("eventDate").value, 
+            document.getElementById("eventNotes").value,
+            promo
+        );
+        wa(msg, p);
+    }
+
+    function sendRepertoire() {
+        if(selected.length === 0) return alert("Seleccione al menos una pieza.");
+        const msg = `🎻 *REPERTORIO SELECCIONADO*\n*Cliente:* ${document.getElementById("userName").value}\n\n*Piezas:*\n${selected.map((s,i)=>`${i+1}. ${s}`).join("\n")}\n\n📸 Instagram: ${igFullUrl}`;
+        wa(msg);
+    }
+
+    function clearUserForm() { if(confirm("¿Borrar datos?")) { localStorage.removeItem("jh_v_elegance"); location.reload(); } }
+    function checkAdmin() { if(prompt("Acceso:") === "admo123") document.getElementById("adminArea").style.display = "block"; }
+    function clearData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+
+    createList(popRock, "listPop");
+    createList(cristiana, "listCristo");
+    window.onload = load;
+</script>
+</body>
+</html>
